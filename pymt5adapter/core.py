@@ -86,10 +86,19 @@ def _context_manager_modified(participation, advanced_features=True):
                             log_dict['latency_ms'] = use_func._perf_timer
                         last_err = mt5_last_error()
                         log_dict['last_error'] = mt5_last_error()
-                        log_dict['call_signature'] = dict(function=use_func.__name__, args=args, kwargs={k: str(v) for k, v in kwargs.items()})
+                        # log_dict['call_signature'] = dict(function=use_func.__name__, args=tuple(map(lambda arg: str(arg), args)),
+                        #                                  kwargs={k: str(v) for k, v in kwargs.items()})
+                        log_dict['call_signature'] = dict(function=use_func.__name__, args=tuple(str(arg) for arg in args),
+                                                         kwargs={k: str(v) for k, v in kwargs.items()})
+                        #log_dict['call_signature'] = dict(function=use_func.__name__, args=args,
+                        #                                  kwargs={k: str(v) for k, v in kwargs.items()})
                         # log_dict['call_signature'] = dict(function=use_func.__name__, args=args, kwargs=kwargs)
                         # call_sig = f"{f.__name__}({_h.args_to_str(args, kwargs)})"
-                        log(log_dict)
+                        try:
+                            log(log_dict)
+                        except Exception as e:
+                            print("da isser wieder...")
+                            raise  e
                     if isinstance(result, OrderSendResult):
                         response = result._asdict()
                         request = response.pop('request')._asdict()

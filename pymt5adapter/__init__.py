@@ -14,7 +14,7 @@ from .oem import *
 as_dict_all = dictify  # alias
 
 __version__ = {
-    'pymt5adapter': '0.4.4',
+    'pymt5adapter': '0.4.5',
     'MetaTrader5' : _mt5.__version__,
 }
 

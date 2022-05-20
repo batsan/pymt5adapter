@@ -7,6 +7,7 @@
 # @pytest.fixture(autouse=True)
 # def mt5_init_shutdown():
 #     try:
+#         from c7.utils.mt5 import MT5Utils
 #         mt5.initialize()
 #         yield
 #     finally:
@@ -124,22 +125,39 @@
 #     assert (p1 := mt5.positions_get()) is not None
 #     assert (p2 := make_kwargs_func(mt5.positions_get)()) is not None
 #     assert len(p1) == len(p2)
-#     invalid_positions = mt5.positions_get(symbol="FAKE_SYMBOL")
-#     assert isinstance(invalid_positions, tuple)
-#     assert len(invalid_positions) == 0
 #     invalid_positions = mt5.positions_get(ticket=0)
 #     assert isinstance(invalid_positions, tuple)
 #     assert len(invalid_positions) == 0
+#     invalid_positions = mt5.positions_get(symbol="FAKE_SYMBOL")
+#     assert mt5.last_error()[0] != mt5.RES_S_OK
+#     assert invalid_positions is None
+#     #assert isinstance(invalid_positions, tuple)
+#     #assert len(invalid_positions) == 0
+#
+# # def test_history_deals_get():
+# #     from datetime import datetime, timedelta
+# #     time_from = datetime(year=2000, month=1, day=1)
+# #     time_to = datetime.now()
+# #     deals = mt5.history_deals_get(time_from, time_to, ticket=0)
+# #     assert isinstance(deals, tuple)
+# #
+# #
+# # def test_history_orders_get():
+# #     from datetime import datetime
+# #     time_from = datetime(year=2000, month=1, day=1)
+# #     time_to = datetime.now()
+# #     orders = mt5.history_orders_get(time_from, time_to, ticket=0)
+# #     assert isinstance(orders, tuple)
 #
 #
-# def test_history_deals_get():
-#     deals = mt5.history_deals_get(ticket=0)
-#     # assert isinstance(deals, tuple)
-#
-#
-# def test_history_orders_get():
-#     orders = mt5.history_orders_get(ticket=0)
-#     # assert isinstance(orders, tuple)
+# # def test_consistency_for_empty_data_returns():
+# #     def all_same_return_types(results):
+# #         g = itertools.groupby(results, key=lambda v: type(v))
+# #         return next(g, True) and not next(g, False)
+# #
+# #     funcs = (mt5.positions_get, mt5.orders_get, mt5.history_orders_get, mt5.history_deals_get,)
+# #     results = [f(ticket=0) for f in funcs]
+# #     assert all_same_return_types(results)
 #
 #
 # def test_consistency_for_empty_data_returns():
@@ -147,42 +165,45 @@
 #         g = itertools.groupby(results, key=lambda v: type(v))
 #         return next(g, True) and not next(g, False)
 #
-#     funcs = (mt5.positions_get, mt5.orders_get, mt5.history_orders_get, mt5.history_deals_get,)
+#     funcs = (mt5.positions_get, mt5.orders_get,)
 #     results = [f(ticket=0) for f in funcs]
+#     assert all_same_return_types(results)
+#
+#     from datetime import datetime
+#     time_from = datetime(year=2000, month=1, day=1)
+#     time_to = datetime.now()
+#     funcs = (mt5.history_orders_get, mt5.history_deals_get,)
+#     # returns None if there are no date arguments.
+#     results = [f(time_from, time_to, ticket=0) for f in funcs]
 #     assert all_same_return_types(results)
 #
 #
 # def test_copy_ticks_range():
 #     from datetime import datetime, timedelta
-#     time_to = datetime.utcnow()
+#     time_to = datetime.now()
 #     time_from = time_to - timedelta(minutes=3)
-#     ticks = mt5.copy_ticks_range("EPM20", time_from, time_to, mt5.COPY_TICKS_ALL)
+#     ticks = mt5.copy_ticks_range("EURUSD", time_from, time_to, mt5.COPY_TICKS_ALL)
 #     assert mt5.last_error()[0] == mt5.RES_S_OK
 #     assert len(ticks) > 0
 #
 #
-# #
-# # def test_copy_ticks_range():
-# #     from datetime import datetime, timedelta
-# #     import time
-# #     time_to = datetime.now()
-# #     time_from = time_to - timedelta(minutes=5)
-# #     print(mt5.initialize())
-# #     for i in range(20):
-# #         ticks = mt5.copy_ticks_range("USDJPY", time_from, time_to, mt5.COPY_TICKS_ALL)
-# #         print(mt5.last_error())
-# #         print(ticks)
-# #         if len(ticks) > 0:
-# #             break
-# #         time.sleep(1)
-# #         print(mt5.last_error()[0])
-# #     assert mt5.last_error()[0] == mt5.RES_S_OK
-# #     assert len(ticks) > 0
-# #     mt5.shutdown()
-#
-#
-#
-#
+# # # def test_copy_ticks_range():
+# # #     from datetime import datetime, timedelta
+# # #     import time
+# # #     time_to = datetime.now()
+# # #     time_from = time_to - timedelta(minutes=5)
+# # #     print(mt5.initialize())
+# # #     for i in range(20):
+# # #         ticks = mt5.copy_ticks_range("USDJPY", time_from, time_to, mt5.COPY_TICKS_ALL)
+# # #         print(mt5.last_error())
+# # #         print(ticks)
+# # #         if len(ticks) > 0:
+# # #             break
+# # #         time.sleep(1)
+# # #         print(mt5.last_error()[0])
+# # #     assert mt5.last_error()[0] == mt5.RES_S_OK
+# # #     assert len(ticks) > 0
+# # #     mt5.shutdown()
 #
 #
 # if __name__ == "__main__":

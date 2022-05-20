@@ -21,5 +21,5 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     install_requires=['MetaTrader5==5.0.37'],
     setup_requires=['wheel'],
-    python_requires='>=3.6',
+    python_requires='>=3.9',
 )

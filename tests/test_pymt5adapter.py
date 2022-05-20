@@ -9,11 +9,11 @@ from .context import pymt5adapter as mta
 from pymt5adapter.state import global_state as state
 from pymt5adapter import MT5Error
 
-
 import logging
-from pathlib import Path
 
-LOGPATH = Path.home() / 'Desktop/pytest_mt5.log'
+LOGPATH = r'./pytest_mt5.log'
+
+
 # PYTEST SETUP
 @pytest.fixture
 def connected():
@@ -82,7 +82,6 @@ def test_make_native():
             j = json.dumps(x)
         except Exception:
             pytest.fail()
-
 
 
 def test_return_as_dict_all(connected):
@@ -173,9 +172,8 @@ def test_copy_ticks_range(connected):
 def test_copy_ticks_from(connected):
     with connected:
         symbol = first_symbol()
-        last_bar_time = datetime.now() - timedelta(
-            minutes=1)  # mt5.copy_rates_from_pos(symbol.name, mt5.TIMEFRAME.M1, 0, 1)[0]['time']
-        print(last_bar_time)
+        last_bar_time = datetime.fromtimestamp(symbol.time)
+        print("test_copy_ticks_from: symbol: ", symbol.name, ", last_bar_time: ", str(last_bar_time))
         ticks = mta.copy_ticks_from(symbol.name,
                                     datetime_from=last_bar_time,
                                     count=mta.MAX_TICKS,

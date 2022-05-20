@@ -7,7 +7,6 @@
 # @pytest.fixture(autouse=True)
 # def mt5_init_shutdown():
 #     try:
-#         from c7.utils.mt5 import MT5Utils
 #         mt5.initialize()
 #         yield
 #     finally:
